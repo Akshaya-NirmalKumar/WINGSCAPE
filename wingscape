@@ -1,0 +1,31 @@
+# Backend (Flask) for Wingscape
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+# Dummy flight data
+flights = [
+    {"id": 1, "source": "New York", "destination": "London", "date": "2025-01-15", "price": 500},
+    {"id": 2, "source": "New York", "destination": "Paris", "date": "2025-01-16", "price": 450},
+    {"id": 3, "source": "London", "destination": "Dubai", "date": "2025-01-20", "price": 700},
+    {"id": 4, "source": "Paris", "destination": "Tokyo", "date": "2025-01-25", "price": 900},
+]
+
+@app.route('/search', methods=['GET'])
+def search_flights():
+    source = request.args.get('source')
+    destination = request.args.get('destination')
+    date = request.args.get('date')
+
+    # Filter flights based on user input
+    matching_flights = [
+        flight for flight in flights
+        if flight['source'].lower() == source.lower() and
+           flight['destination'].lower() == destination.lower() and
+           flight['date'] == date
+    ]
+
+    return jsonify(matching_flights)
+
+if __name__ == '__main__':
+    app.run(debug=True)
